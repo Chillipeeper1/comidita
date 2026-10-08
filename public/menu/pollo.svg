@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-labelledby="t">
+  <title id="t">Pollo al limón con arroz integral</title>
+  <rect width="400" height="300" fill="#f8f1e4"/>
+  <ellipse cx="200" cy="155" rx="150" ry="120" fill="#fff"/>
+  <ellipse cx="200" cy="155" rx="118" ry="94" fill="#fdfaf4"/>
+  <ellipse cx="160" cy="135" rx="62" ry="42" fill="#d9a066"/>
+  <ellipse cx="245" cy="135" rx="45" ry="36" fill="#e8d6a8"/>
+  <circle cx="180" cy="200" r="20" fill="#2f8a57"/><circle cx="210" cy="210" r="17" fill="#3fa36a"/><circle cx="240" cy="198" r="15" fill="#2f8a57"/>
+</svg>

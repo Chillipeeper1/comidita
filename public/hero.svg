@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480" role="img" aria-labelledby="t">
+  <title id="t">Plato de comida casera con arroz, pollo y verduras</title>
+  <rect width="600" height="480" rx="40" fill="#f8f1e4"/>
+  <circle cx="500" cy="80" r="60" fill="#fde4d6"/>
+  <circle cx="90" cy="410" r="50" fill="#d5ecdd"/>
+  <ellipse cx="300" cy="270" rx="210" ry="190" fill="#ffffff" stroke="#efe3cc" stroke-width="6"/>
+  <ellipse cx="300" cy="270" rx="165" ry="148" fill="#fdfaf4"/>
+  <path d="M175 250c10-60 70-95 125-90 30 3 50 20 45 50-6 40-55 70-110 72-40 2-65-10-60-32z" fill="#f3e2b8"/>
+  <g fill="#e8d199"><circle cx="210" cy="240" r="5"/><circle cx="240" cy="220" r="5"/><circle cx="270" cy="235" r="5"/><circle cx="235" cy="255" r="5"/><circle cx="300" cy="215" r="5"/><circle cx="205" cy="270" r="5"/></g>
+  <path d="M310 260c30-30 95-30 120 0 18 22 5 55-30 65-40 12-90 0-100-25-4-14 0-28 10-40z" fill="#d9894f"/>
+  <path d="M330 270l70 20M335 290l60 18" stroke="#b56a33" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="240" cy="340" r="26" fill="#2f8a57"/><circle cx="270" cy="360" r="22" fill="#217146"/><circle cx="215" cy="365" r="20" fill="#3fa36a"/>
+  <circle cx="340" cy="365" r="18" fill="#e06a35"/><circle cx="372" cy="350" r="16" fill="#f08a5a"/>
+  <path d="M420 200c10-25 35-30 50-20-5 20-25 35-50 20z" fill="#3fa36a"/>
+  <path d="M110 120c0-30 20-50 40-50s40 20 40 50" fill="none" stroke="#c4531f" stroke-width="6" stroke-linecap="round" opacity=".5"/>
+</svg>

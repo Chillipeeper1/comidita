@@ -37,6 +37,71 @@ Muchos oficinistas comen comida rápida o de restaurante por falta de opciones p
 | Despliegue | Vercel |
 | Gestión Agile | GitHub Projects |
 
+## Cómo correr el proyecto
+
+Requisitos: Node.js 20 o superior.
+
+```bash
+npm install
+cp .env.example .env    # opcional: sin DATABASE_URL la landing usa datos de prueba
+npm run dev             # http://localhost:3000
+```
+
+Con la base de datos de Supabase configurada en `.env`:
+
+```bash
+npm run db:migrate      # aplica prisma/schema.prisma
+npm run db:seed         # menú y zonas de ejemplo
+```
+
+## Estructura
+
+```
+src/
+  app/                  rutas (App Router): / , /suscribirse, manifest PWA
+  components/
+    ui/                 Button, Card, Badge, Container, SectionHeading
+    layout/             Navbar y Footer
+    sections/           secciones de la landing (Hero, WeeklyMenu, ...)
+  lib/
+    menu.ts             getWeeklyMenu(): lee el menú publicado con Prisma
+    site.ts             datos del negocio y enlaces de WhatsApp/Instagram
+    sample-data.ts      datos de prueba y semilla
+prisma/                 schema.prisma y seed.ts
+docs/                   diagramas, wireframes y documentación Agile
+```
+
+## Componentes UI
+
+Todos están en `src/components/ui` y aceptan `className` para ajustes puntuales.
+
+```tsx
+import { Button, ButtonLink } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { Container } from "@/components/ui/Container";
+
+<Container>                                   {/* ancho máximo y márgenes laterales */}
+  <Badge tone="accent">Nuevo</Badge>          {/* tone: "brand" | "accent" */}
+  <Card className="p-6">Contenido</Card>
+  <ButtonLink href="/suscribirse">Suscríbete</ButtonLink>
+  <Button variant="secondary" size="lg" type="submit">Enviar</Button>
+</Container>                                  {/* variant: primary | secondary | ghost · size: md | lg */}
+```
+
+### Tema
+
+Tailwind CSS v4 define el tema en `src/app/globals.css` con `@theme` (sustituye a `tailwind.config`):
+
+| Token | Uso | Clases |
+|---|---|---|
+| `brand` (verde) | botones, enlaces, acentos | `bg-brand-600`, `text-brand-700` |
+| `accent` (terracota) | avisos y destacados | `bg-accent-100`, `text-accent-600` |
+| `cream` | fondos de sección | `bg-cream-100` |
+| `ink` | texto | `text-ink-900`, `text-ink-700` |
+| `font-display` (Fraunces) | títulos | `font-display` |
+| `font-sans` (Inter) | texto general | por defecto |
+
 ## Equipo
 
 | Integrante | Responsabilidad |

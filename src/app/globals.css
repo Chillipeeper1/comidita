@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/*
+ * Tema de Comidita (HU-03). En Tailwind v4 la paleta y la tipografía se
+ * definen aquí con @theme en lugar de tailwind.config. Cada token genera
+ * utilidades: --color-brand-600 → bg-brand-600, text-brand-600, etc.
+ */
+@theme {
+  --color-cream-50: #fdfaf4;
+  --color-cream-100: #f8f1e4;
+  --color-cream-200: #efe3cc;
+
+  --color-brand-50: #eef7f1;
+  --color-brand-100: #d5ecdd;
+  --color-brand-500: #2f8a57;
+  --color-brand-600: #217146;
+  --color-brand-700: #1a5a38;
+  --color-brand-900: #0f3421;
+
+  --color-accent-100: #fde4d6;
+  --color-accent-500: #e06a35;
+  --color-accent-600: #a3401a;
+
+  --color-ink-500: #6b6358;
+  --color-ink-700: #423c34;
+  --color-ink-900: #231f1a;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--color-cream-50);
+  color: var(--color-ink-900);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

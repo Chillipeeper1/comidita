@@ -1,0 +1,49 @@
+// Esquema base de Comidita. HU-23 (Infra) y HU-11 (Suscripción) pueden ajustarlo.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Menu {
+  id            String       @id @default(uuid())
+  weekStart     DateTime     @db.Date
+  orderDeadline DateTime
+  published     Boolean      @default(false)
+  options       MenuOption[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@unique([weekStart])
+}
+
+model MenuOption {
+  id          String  @id @default(uuid())
+  menuId      String
+  menu        Menu    @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  name        String
+  description String
+  imageUrl    String?
+  position    Int
+
+  @@unique([menuId, position])
+}
+
+model Zone {
+  id             String @id @default(uuid())
+  name           String @unique
+  deliveryWindow String
+}
+
+model Subscriber {
+  id        String   @id @default(uuid())
+  name      String
+  contact   String   @unique
+  zone      String
+  schedule  String
+  createdAt DateTime @default(now())
+}

@@ -23,49 +23,43 @@ interface MenuManagerProps {
 
 export default function MenuManager({ menus }: MenuManagerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [weekStart, setWeekStart] = useState('');
-  const [orderDeadline, setOrderDeadline] = useState('');
-  
-  // Estado para las opciones del menú con su respectiva posición
-  const [options, setOptions] = useState([
-    { name: '', description: '', price: '', position: 1 },
-    { name: '', description: '', price: '', position: 2 }
-  ]);
   const [loading, setLoading] = useState(false);
 
-  const handleOptionChange = (index: number, field: string, value: any) => {
-    const updatedOptions = [...options];
-    updatedOptions[index] = { ...updatedOptions[index], [field]: value };
-    setOptions(updatedOptions);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
-    const formattedData = {
+    const formData = new FormData(e.currentTarget);
+
+    const weekStart = formData.get('weekStart') as string;
+    const orderDeadline = formData.get('orderDeadline') as string;
+
+    // Estructuramos explícitamente incluyendo nombre, descripción, precio y posición
+    const payload = {
       weekStart,
       orderDeadline,
-      options: options.map((opt, idx) => ({
-        name: opt.name,
-        description: opt.description,
-        price: parseFloat(opt.price) || 0,
-        position: idx + 1
-      }))
+      options: [
+        {
+          name: (formData.get('opt1_name') as string) || '',
+          description: (formData.get('opt1_desc') as string) || '',
+          price: parseFloat(formData.get('opt1_price') as string) || 0,
+          position: 1,
+        },
+        {
+          name: (formData.get('opt2_name') as string) || '',
+          description: (formData.get('opt2_desc') as string) || '',
+          price: parseFloat(formData.get('opt2_price') as string) || 0,
+          position: 2,
+        },
+      ],
     };
 
-    const res = await createMenu(formattedData);
+    const res = await createMenu(payload);
     setLoading(false);
 
     if (res.success) {
       setIsOpen(false);
-      setWeekStart('');
-      setOrderDeadline('');
-      setOptions([
-        { name: '', description: '', price: '', position: 1 },
-        { name: '', description: '', price: '', position: 2 }
-      ]);
-      window.location.reload(); // Recarga para reflejar el menú guardado en Supabase
+      window.location.reload();
     } else {
       alert(res.error || 'Error al crear el menú');
     }
@@ -76,6 +70,7 @@ export default function MenuManager({ menus }: MenuManagerProps) {
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-bold text-gray-800">Gestión de Menús Diarios</h3>
         <button
+          type="button"
           onClick={() => setIsOpen(true)}
           className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
         >
@@ -126,64 +121,94 @@ export default function MenuManager({ menus }: MenuManagerProps) {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Inicio de Semana (Fecha)</label>
                   <input
                     type="date"
+                    name="weekStart"
                     required
-                    value={weekStart}
-                    onChange={(e) => setWeekStart(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500 text-gray-900"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Límite de Pedidos (Fecha y Hora)</label>
                   <input
                     type="datetime-local"
+                    name="orderDeadline"
                     required
-                    value={orderDeadline}
-                    onChange={(e) => setOrderDeadline(e.target.value)}
-                    className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500"
+                    className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500 text-gray-900"
                   />
                 </div>
               </div>
 
               <div className="space-y-4">
                 <h5 className="font-semibold text-gray-800 text-sm">Opciones de Platillos</h5>
-                {options.map((option, index) => (
-                  <div key={index} className="p-4 border border-gray-200 rounded-md bg-gray-50 space-y-3">
-                    <p className="text-xs font-semibold text-gray-500 uppercase">Opción {index + 1}</p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                      <div className="md:col-span-2">
-                        <input
-                          type="text"
-                          required
-                          placeholder="Nombre del platillo (ej. Pechuga asada)"
-                          value={option.name}
-                          onChange={(e) => handleOptionChange(index, 'name', e.target.value)}
-                          className="w-full border border-gray-300 rounded-md p-2 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="number"
-                          step="0.01"
-                          required
-                          placeholder="Precio ($)"
-                          value={option.price}
-                          onChange={(e) => handleOptionChange(index, 'price', e.target.value)}
-                          className="w-full border border-gray-300 rounded-md p-2 text-sm"
-                        />
-                      </div>
+                
+                {/* Opción 1 */}
+                <div className="p-4 border border-gray-200 rounded-md bg-gray-50 space-y-3">
+                  <p className="text-xs font-semibold text-gray-500 uppercase">Opción 1</p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="md:col-span-2">
+                      <input
+                        type="text"
+                        name="opt1_name"
+                        required
+                        placeholder="Nombre del platillo (ej. Pechuga asada)"
+                        className="w-full border border-gray-300 rounded-md p-2 text-sm text-gray-900"
+                      />
                     </div>
                     <div>
                       <input
-                        type="text"
+                        type="number"
+                        step="0.01"
+                        name="opt1_price"
                         required
-                        placeholder="Descripción corta (ej. Acompañado de arroz y ensalada)"
-                        value={option.description}
-                        onChange={(e) => handleOptionChange(index, 'description', e.target.value)}
-                        className="w-full border border-gray-300 rounded-md p-2 text-sm"
+                        placeholder="Precio ($)"
+                        className="w-full border border-gray-300 rounded-md p-2 text-sm text-gray-900"
                       />
                     </div>
                   </div>
-                ))}
+                  <div>
+                    <input
+                      type="text"
+                      name="opt1_desc"
+                      required
+                      placeholder="Descripción corta (ej. Acompañado de arroz y ensalada)"
+                      className="w-full border border-gray-300 rounded-md p-2 text-sm text-gray-900"
+                    />
+                  </div>
+                </div>
+
+                {/* Opción 2 */}
+                <div className="p-4 border border-gray-200 rounded-md bg-gray-50 space-y-3">
+                  <p className="text-xs font-semibold text-gray-500 uppercase">Opción 2</p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="md:col-span-2">
+                      <input
+                        type="text"
+                        name="opt2_name"
+                        required
+                        placeholder="Nombre del platillo (ej. Milanesa)"
+                        className="w-full border border-gray-300 rounded-md p-2 text-sm text-gray-900"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="number"
+                        step="0.01"
+                        name="opt2_price"
+                        required
+                        placeholder="Precio ($)"
+                        className="w-full border border-gray-300 rounded-md p-2 text-sm text-gray-900"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="opt2_desc"
+                      required
+                      placeholder="Descripción corta"
+                      className="w-full border border-gray-300 rounded-md p-2 text-sm text-gray-900"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="flex justify-end space-x-3 pt-4 border-t">

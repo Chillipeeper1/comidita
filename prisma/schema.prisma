@@ -1,4 +1,4 @@
-// Esquema base de Comidita. HU-23 (Infra) y HU-11 (Suscripción) pueden ajustarlo.
+// Esquema base de Comidita con soporte para favoritos (HU-28)
 generator client {
   provider = "prisma-client-js"
 }
@@ -22,13 +22,15 @@ model Menu {
 }
 
 model MenuOption {
-  id          String  @id @default(uuid())
+  id          String     @id @default(uuid())
   menuId      String
-  menu        Menu    @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  menu        Menu       @relation(fields: [menuId], references: [id], onDelete: Cascade)
   name        String
   description String
+  price       Float    // <-- Cambiado de Decimal a Float
   imageUrl    String?
   position    Int
+  favorites   Favorite[]
 
   @@unique([menuId, position])
 }
@@ -40,10 +42,22 @@ model Zone {
 }
 
 model Subscriber {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
-  contact   String   @unique
+  contact   String     @unique
   zone      String
   schedule  String
-  createdAt DateTime @default(now())
+  favorites Favorite[]
+  createdAt DateTime   @default(now())
+}
+
+model Favorite {
+  id           String     @id @default(uuid())
+  subscriberId String
+  subscriber   Subscriber @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  menuOptionId String
+  menuOption   MenuOption @relation(fields: [menuOptionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+
+  @@unique([subscriberId, menuOptionId])
 }

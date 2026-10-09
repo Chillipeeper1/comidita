@@ -32,26 +32,32 @@ export async function getMenus() {
   }
 }
 
-export async function createMenu(formData: any) {
+type MenuOptionInput = {
+  name?: string;
+  description?: string;
+  price?: number | string;
+  position?: number;
+};
+
+type CreateMenuInput = {
+  weekStart: string;
+  orderDeadline: string;
+  options?: MenuOptionInput[];
+};
+
+export async function createMenu(formData: CreateMenuInput) {
   try {
     // Normalizamos las fechas defensivamente
     const weekStartDate = new Date(formData.weekStart + 'T00:00:00.000Z');
     const orderDeadlineDate = new Date(formData.orderDeadline);
 
-    // Mapeo ultra defensivo que acepta múltiples posibles nombres de propiedades del frontend
     const rawOptions = formData.options || [];
-    const formattedOptions = rawOptions.map((opt: any, index: number) => ({
-      name: String(opt.name || opt.nombre || '').trim(),
-      description: String(opt.description || opt.descripcion || '').trim(),
-      price: parseFloat(opt.price ?? opt.precio ?? 0) || 0,
-      position: Number(opt.position ?? opt.orden ?? index + 1),
+    const formattedOptions = rawOptions.map((opt, index) => ({
+      name: String(opt.name || '').trim(),
+      description: String(opt.description || '').trim(),
+      price: Number(opt.price) || 0,
+      position: Number(opt.position ?? index + 1),
     }));
-
-    console.log('Datos procesados a enviar a Prisma:', {
-      weekStart: weekStartDate,
-      orderDeadline: orderDeadlineDate,
-      options: formattedOptions,
-    });
 
     await prisma.menu.create({
       data: {
@@ -66,9 +72,12 @@ export async function createMenu(formData: any) {
     
     revalidatePath('/admin');
     return { success: true };
-  } catch (error: any) {
-    console.error('ERROR DE PRISMA DETALLADO:', error);
-    return { success: false, error: error?.message || 'Error desconocido al guardar en base de datos' };
+  } catch (error) {
+    console.error('Error al crear menú:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Error desconocido al guardar en base de datos',
+    };
   }
 }
 

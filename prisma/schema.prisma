@@ -28,6 +28,7 @@ model MenuOption {
   name        String
   description String
   imageUrl    String?
+  price       Float   @default(0)
   position    Int
 
   @@unique([menuId, position])

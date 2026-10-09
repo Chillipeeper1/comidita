@@ -7,7 +7,7 @@ interface Subscriber {
   contact: string;
   zone: string;
   schedule: string;
-  createdAt: string;
+  createdAt: Date | string;
 }
 
 interface SubscriberTableProps {

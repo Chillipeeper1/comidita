@@ -4,14 +4,14 @@ import { useRouter } from 'next/navigation';
 import SubscriberTable from '@/components/admin/SubscriberTable';
 import MenuManager from '@/components/admin/MenuManager';
 import ZoneManager from '@/components/admin/ZoneManager';
+import type { Subscriber, Zone } from '@prisma/client';
 import { getSubscribers, getMenus, getZones } from '@/actions/adminActions';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
-  // Tipamos explícitamente los estados para evitar conflictos con TypeScript
-  const [subscribers, setSubscribers] = useState<any[]>([]);
-  const [menus, setMenus] = useState<any[]>([]);
-  const [zones, setZones] = useState<any[]>([]);
+  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+  const [menus, setMenus] = useState<Awaited<ReturnType<typeof getMenus>>>([]);
+  const [zones, setZones] = useState<Zone[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

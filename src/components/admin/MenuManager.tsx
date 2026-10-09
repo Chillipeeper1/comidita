@@ -12,8 +12,8 @@ interface MenuOption {
 
 interface Menu {
   id: string;
-  weekStart: string;
-  orderDeadline: string;
+  weekStart: Date | string;
+  orderDeadline: Date | string;
   options: MenuOption[];
 }
 
@@ -33,7 +33,7 @@ export default function MenuManager({ menus }: MenuManagerProps) {
   ]);
   const [loading, setLoading] = useState(false);
 
-  const handleOptionChange = (index: number, field: string, value: any) => {
+  const handleOptionChange = (index: number, field: 'name' | 'description' | 'price', value: string) => {
     const updatedOptions = [...options];
     updatedOptions[index] = { ...updatedOptions[index], [field]: value };
     setOptions(updatedOptions);

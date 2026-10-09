@@ -36,7 +36,7 @@ export async function registerSubscriber(prevState: FormState, formData: FormDat
   if (!validation.success) {
     return {
       success: false,
-      error: validation.error.errors[0].message,
+      error: validation.error.issues[0].message,
     };
   }
 
@@ -63,6 +63,7 @@ export async function registerSubscriber(prevState: FormState, formData: FormDat
       data: validation.data,
     };
   } catch (error) {
+    console.error("Error al guardar suscriptor:", error);
     return {
       success: false,
       error: "Ocurrió un error al guardar tu suscripción. Inténtalo nuevamente.",

@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { login } from '@/actions/authActions';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -8,14 +9,13 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Credenciales de prueba para el equipo
-    if (email === 'admin@comidita.mx' && password === 'comidita123') {
-      localStorage.setItem('comidita_admin_auth', 'true');
+    const result = await login(email, password);
+    if (result.success) {
       router.push('/admin');
     } else {
-      setError('Credenciales incorrectas. Usa admin@comidita.mx / comidita123');
+      setError(result.error ?? 'Credenciales incorrectas.');
     }
   };
 

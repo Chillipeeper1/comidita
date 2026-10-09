@@ -2,9 +2,11 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { requireAdmin } from '@/lib/session';
 
 // --- SUSCRIPTORES ---
 export async function getSubscribers() {
+  await requireAdmin();
   try {
     return await prisma.subscriber.findMany({
       orderBy: { createdAt: 'desc' },
@@ -17,6 +19,7 @@ export async function getSubscribers() {
 
 // --- MENÚS ---
 export async function getMenus() {
+  await requireAdmin();
   try {
     return await prisma.menu.findMany({
       include: {
@@ -46,6 +49,7 @@ type CreateMenuInput = {
 };
 
 export async function createMenu(formData: CreateMenuInput) {
+  await requireAdmin();
   try {
     // Normalizamos las fechas defensivamente
     const weekStartDate = new Date(formData.weekStart + 'T00:00:00.000Z');
@@ -83,6 +87,7 @@ export async function createMenu(formData: CreateMenuInput) {
 
 // --- ZONAS ---
 export async function getZones() {
+  await requireAdmin();
   try {
     return await prisma.zone.findMany({
       orderBy: { name: 'asc' },
@@ -94,6 +99,7 @@ export async function getZones() {
 }
 
 export async function createZone(data: { name: string; deliveryWindow: string }) {
+  await requireAdmin();
   try {
     await prisma.zone.create({
       data,

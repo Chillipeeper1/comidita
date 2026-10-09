@@ -6,6 +6,7 @@ import MenuManager from '@/components/admin/MenuManager';
 import ZoneManager from '@/components/admin/ZoneManager';
 import type { Subscriber, Zone } from '@prisma/client';
 import { getSubscribers, getMenus, getZones } from '@/actions/adminActions';
+import { logout } from '@/actions/authActions';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -15,12 +16,6 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const auth = localStorage.getItem('comidita_admin_auth');
-    if (!auth) {
-      router.push('/admin/login');
-      return;
-    }
-
     async function fetchData() {
       try {
         const [subsData, menusData, zonesData] = await Promise.all([
@@ -33,6 +28,7 @@ export default function AdminDashboardPage() {
         setZones(zonesData);
       } catch (error) {
         console.error('Error cargando datos del panel:', error);
+        router.push('/admin/login');
       } finally {
         setLoading(false);
       }
@@ -41,8 +37,8 @@ export default function AdminDashboardPage() {
     fetchData();
   }, [router]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('comidita_admin_auth');
+  const handleLogout = async () => {
+    await logout();
     router.push('/admin/login');
   };
 

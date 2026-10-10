@@ -8,7 +8,6 @@ import { getSubscribers, getMenus, getZones } from '@/actions/adminActions';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
-  // Tipamos explícitamente los estados para evitar conflictos con TypeScript
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [menus, setMenus] = useState<any[]>([]);
   const [zones, setZones] = useState<any[]>([]);
@@ -28,9 +27,17 @@ export default function AdminDashboardPage() {
           getMenus(),
           getZones(),
         ]);
-        setSubscribers(subsData);
-        setMenus(menusData);
-        setZones(zonesData);
+
+        console.log('📌 DATOS RECIBIDOS DEL SERVIDOR:', {
+          suscriptores: subsData,
+          menus: menusData,
+          zonas: zonesData,
+        });
+
+        // Forzamos la serialización segura a objetos planos
+        setSubscribers(subsData ? JSON.parse(JSON.stringify(subsData)) : []);
+        setMenus(menusData ? JSON.parse(JSON.stringify(menusData)) : []);
+        setZones(zonesData ? JSON.parse(JSON.stringify(zonesData)) : []);
       } catch (error) {
         console.error('Error cargando datos del panel:', error);
       } finally {
@@ -48,25 +55,30 @@ export default function AdminDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600 font-medium">Cargando panel de administración...</p>
+      <div className="min-h-screen bg-[#FAF6F0] flex items-center justify-center">
+        <p className="text-[#236B4D] font-medium animate-pulse">Cargando panel de administración...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-[#FAF6F0] p-6 md:p-10 font-sans text-neutral-900">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Cabecera */}
-        <header className="flex justify-between items-center bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-8 rounded-3xl shadow-sm border border-[#EBE3D5] gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Panel de Administración - Comidita</h1>
-            <p className="text-gray-600">Gestión general de suscriptores, menús y configuración de zonas.</p>
+            <span className="text-xs font-semibold tracking-wider text-[#236B4D] uppercase bg-[#D2ECE1] px-3 py-1 rounded-full">
+              Panel Interno
+            </span>
+            <h1 className="text-3xl font-serif font-bold text-neutral-900 mt-2">
+              Comidita <span className="text-[#236B4D] font-normal text-xl">/ Administración</span>
+            </h1>
+            <p className="text-neutral-600 text-sm mt-1">Gestión general de suscriptores, menús y configuración de zonas.</p>
           </div>
           <button
             onClick={handleLogout}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            className="bg-neutral-100 hover:bg-red-50 text-neutral-700 hover:text-red-600 border border-neutral-200 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 shadow-sm"
           >
             Cerrar Sesión
           </button>
@@ -74,9 +86,15 @@ export default function AdminDashboardPage() {
 
         {/* Secciones del Panel */}
         <div className="space-y-8">
-          <SubscriberTable subscribers={subscribers} />
-          <MenuManager menus={menus} />
-          <ZoneManager zones={zones} />
+          <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-[#EBE3D5]">
+            <SubscriberTable subscribers={subscribers} />
+          </div>
+          <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-[#EBE3D5]">
+            <MenuManager menus={menus} />
+          </div>
+          <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-[#EBE3D5]">
+            <ZoneManager zones={zones} />
+          </div>
         </div>
 
       </div>
